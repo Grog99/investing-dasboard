@@ -10,7 +10,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "gen:types": "supabase gen types typescript --local > src/db/database.types.ts"
+    "gen:types": "supabase gen types typescript --local > src/db/database.types.ts",
+    "test": "vitest run",
+    "test:smoke": "vitest run --config vitest.smoke.config.ts"
   },
   "dependencies": {
     "@astrojs/check": "^0.9.8",
@@ -53,6 +55,7 @@
     "supabase": "^2.109.1",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.59.2",
+    "vitest": "^4.1.10",
     "wrangler": "^4.90.0"
   },
   "overrides": {

@@ -343,10 +343,10 @@ Negligible at MVP scale (single user, low QPS, a handful of symbols). The 15-min
 
 #### Automated
 
-- [ ] 2.1 Unit suite passes: `npm run test` (offline)
-- [ ] 2.2 Tests cover fresh/stale/failure/unavailable/partial-batch/TTL-boundary
-- [ ] 2.3 Build/type-checks against the contract: `npm run build`
-- [ ] 2.4 Linting passes including test files: `npm run lint`
+- [x] 2.1 Unit suite passes: `npm run test` (offline)
+- [x] 2.2 Tests cover fresh/stale/failure/unavailable/partial-batch/TTL-boundary
+- [x] 2.3 Build/type-checks against the contract: `npm run build`
+- [x] 2.4 Linting passes including test files: `npm run lint`
 
 #### Manual
 
