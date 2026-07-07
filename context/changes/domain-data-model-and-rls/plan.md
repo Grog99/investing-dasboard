@@ -420,11 +420,11 @@ per-account filter that every RLS policy and query applies. No further tuning wa
 
 #### Automated
 
-- [x] 3.1 `npm run gen:types` produces a non-empty `src/db/database.types.ts`
-- [x] 3.2 Build/type-check passes: `npm run build`
-- [x] 3.3 Linting passes: `npm run lint`
+- [x] 3.1 `npm run gen:types` produces a non-empty `src/db/database.types.ts` — 11fbb31
+- [x] 3.2 Build/type-check passes: `npm run build` — 11fbb31
+- [x] 3.3 Linting passes: `npm run lint` — 11fbb31
 
 #### Manual
 
-- [ ] 3.4 Typed `holdings` query autocompletes columns and flags a bad column at compile time
-- [ ] 3.5 CLAUDE.md Commands + conventions note match the shipped workflow
+- [x] 3.4 Typed `holdings` query autocompletes columns and flags a bad column at compile time — 11fbb31
+- [x] 3.5 CLAUDE.md Commands + conventions note match the shipped workflow — 11fbb31
