@@ -393,23 +393,23 @@ per-account filter that every RLS policy and query applies. No further tuning wa
 
 #### Automated
 
-- [x] 1.1 Migration applies cleanly: `npx supabase db reset` completes without error
-- [x] 1.2 RLS enabled and four per-operation policies exist
-- [x] 1.3 No lint regression: `npm run lint`
+- [x] 1.1 Migration applies cleanly: `npx supabase db reset` completes without error — 4827e9b
+- [x] 1.2 RLS enabled and four per-operation policies exist — 4827e9b
+- [x] 1.3 No lint regression: `npm run lint` — 4827e9b
 
 #### Manual
 
-- [x] 1.4 Studio shows RLS enabled with exactly four per-operation policies
-- [x] 1.5 Check constraints reject `quantity <= 0` / `buy_price < 0`
-- [x] 1.6 Deleting the owning `auth.users` row cascades to the holding
+- [x] 1.4 Studio shows RLS enabled with exactly four per-operation policies — 4827e9b
+- [x] 1.5 Check constraints reject `quantity <= 0` / `buy_price < 0` — 4827e9b
+- [x] 1.6 Deleting the owning `auth.users` row cascades to the holding — 4827e9b
 
 ### Phase 2: Automated cross-account isolation test + CI enforcement
 
 #### Automated
 
-- [ ] 2.1 Isolation suite passes locally: `npx supabase test db`
+- [x] 2.1 Isolation suite passes locally: `npx supabase test db`
 - [ ] 2.2 The database-tests CI job runs and passes on a PR
-- [ ] 2.3 Test covers all four operations + anon denial
+- [x] 2.3 Test covers all four operations + anon denial
 
 #### Manual
 
