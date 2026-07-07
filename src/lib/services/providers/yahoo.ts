@@ -1,6 +1,7 @@
 import type { PriceProvider, RawQuote } from "./types";
 
 const DEFAULT_BASE_URL = "https://query1.finance.yahoo.com";
+const FETCH_TIMEOUT_MS = 8000;
 
 // Yahoo rejects requests with an empty/bot User-Agent.
 const USER_AGENT =
@@ -32,6 +33,7 @@ export function createYahooProvider(baseUrl: string = DEFAULT_BASE_URL): PricePr
       const url = `${baseUrl}/v8/finance/chart/${encodeURIComponent(providerSymbol)}?interval=1d&range=1d`;
       const response = await fetch(url, {
         headers: { "User-Agent": USER_AGENT },
+        signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
       });
 
       if (!response.ok) {
@@ -40,7 +42,12 @@ export function createYahooProvider(baseUrl: string = DEFAULT_BASE_URL): PricePr
         );
       }
 
-      const data = (await response.json()) as YahooChartResponse;
+      let data: YahooChartResponse;
+      try {
+        data = (await response.json()) as YahooChartResponse;
+      } catch {
+        throw new YahooProviderError(`Yahoo chart response for "${providerSymbol}" was not valid JSON`);
+      }
 
       if (data.chart.error) {
         throw new YahooProviderError(`Yahoo chart error for "${providerSymbol}": ${data.chart.error.description}`);

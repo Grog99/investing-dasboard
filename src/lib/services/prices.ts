@@ -52,11 +52,12 @@ export function createPriceService({
 
     const nowValue = now();
     const { data: snapshots, error } = await supabase.from("price_snapshots").select("*").in("symbol", uniqueSymbols);
-    if (error) {
-      throw error;
-    }
 
-    const snapshotBySymbol = new Map<string, PriceSnapshot>(snapshots.map((snapshot) => [snapshot.symbol, snapshot]));
+    // A cache-read failure degrades like a missing snapshot rather than rejecting the batch —
+    // the whole point of this service is to stay usable when a durable store hiccups.
+    const snapshotBySymbol = new Map<string, PriceSnapshot>(
+      error ? [] : snapshots.map((snapshot) => [snapshot.symbol, snapshot]),
+    );
     const toFetch: string[] = [];
 
     for (const symbol of uniqueSymbols) {
@@ -74,7 +75,7 @@ export function createPriceService({
 
     const outcomes = await Promise.allSettled(toFetch.map((symbol) => provider.fetchQuote(symbol)));
 
-    await Promise.all(
+    const upsertOutcomes = await Promise.allSettled(
       outcomes.map(async (outcome, index) => {
         const symbol = toFetch[index];
 
@@ -101,6 +102,15 @@ export function createPriceService({
         results.set(symbol, { status: "ok", quote: toQuote(upserted, false) });
       }),
     );
+
+    // A thrown (not just error-returning) upsert never reached its results.set() above — degrade it here
+    // instead of letting the whole batch reject and lose the results already computed for other symbols.
+    upsertOutcomes.forEach((settled, index) => {
+      if (settled.status === "rejected") {
+        const symbol = toFetch[index];
+        results.set(symbol, degrade(symbol, snapshotBySymbol.get(symbol)));
+      }
+    });
 
     return results;
   }

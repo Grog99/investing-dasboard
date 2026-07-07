@@ -13,6 +13,8 @@ class FakePriceStore {
   constructor(
     private readonly now: () => Date,
     initial: PriceSnapshot[] = [],
+    private readonly failSelect = false,
+    private readonly failUpsert = false,
   ) {
     initial.forEach((snapshot) => this.snapshots.set(snapshot.symbol, snapshot));
   }
@@ -21,6 +23,9 @@ class FakePriceStore {
     return {
       select: (_columns: string) => ({
         in: (_column: string, values: string[]) => {
+          if (this.failSelect) {
+            return Promise.resolve({ data: null, error: new Error("connection reset") });
+          }
           const data = values
             .map((symbol) => this.snapshots.get(symbol))
             .filter((snapshot): snapshot is PriceSnapshot => snapshot !== undefined);
@@ -30,6 +35,9 @@ class FakePriceStore {
       upsert: (values: PriceSnapshotInsert, _options: { onConflict: string }) => ({
         select: () => ({
           single: () => {
+            if (this.failUpsert) {
+              return Promise.resolve({ data: null, error: new Error("connection reset") });
+            }
             const existing = this.snapshots.get(values.symbol);
             const timestamp = this.now().toISOString();
             const row: PriceSnapshot = {
@@ -221,6 +229,51 @@ describe("createPriceService", () => {
         currency: "USD",
         asOf: currentTime,
         stale: false,
+        source: "yahoo",
+      },
+    });
+  });
+
+  it("degrades to a provider fetch instead of throwing when the cache read fails", async () => {
+    const store = new FakePriceStore(now, [], true);
+    const provider = fakeProvider(
+      new Map([["AAPL", () => Promise.resolve({ price: 150, currency: "USD", asOf: currentTime })]]),
+    );
+    const service = createPriceService({ supabase: asSupabase(store), provider, ttlMs: TTL_MS, now });
+
+    const results = await service.getQuotes(["AAPL"]);
+
+    expect(results.get("AAPL")?.status).toBe("ok");
+  });
+
+  it("returns unavailable (never rejects) when the cache read fails and the provider also fails", async () => {
+    const store = new FakePriceStore(now, [], true);
+    const provider = fakeProvider(new Map([["AAPL", () => Promise.reject(new Error("yahoo down"))]]));
+    const service = createPriceService({ supabase: asSupabase(store), provider, ttlMs: TTL_MS, now });
+
+    const results = await service.getQuotes(["AAPL"]);
+
+    expect(results.get("AAPL")).toEqual({ status: "unavailable", symbol: "AAPL" });
+  });
+
+  it("degrades to stale when the upsert after a successful fetch fails", async () => {
+    const stale = snapshot({ updated_at: "2025-12-31T23:00:00.000Z" });
+    const store = new FakePriceStore(now, [stale], false, true);
+    const provider = fakeProvider(
+      new Map([["AAPL", () => Promise.resolve({ price: 150, currency: "USD", asOf: currentTime })]]),
+    );
+    const service = createPriceService({ supabase: asSupabase(store), provider, ttlMs: TTL_MS, now });
+
+    const results = await service.getQuotes(["AAPL"]);
+
+    expect(results.get("AAPL")).toEqual({
+      status: "ok",
+      quote: {
+        symbol: "AAPL",
+        price: 100,
+        currency: "USD",
+        asOf: new Date("2026-01-01T00:00:00.000Z"),
+        stale: true,
         source: "yahoo",
       },
     });

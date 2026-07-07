@@ -4,7 +4,7 @@
 -- a leak. Anon is denied at the privilege stage (no grant to anon in the migration).
 
 begin;
-select plan(6);
+select plan(7);
 
 select tests.rls_enabled('public', 'price_snapshots');
 
@@ -41,6 +41,12 @@ select results_eq(
   'select price from public.price_snapshots where symbol = ''AAPL''',
   ARRAY[155::numeric(20, 8)],
   'user B can upsert the shared snapshot'
+);
+
+-- Authenticated: delete is denied (migration grants only select/insert/update, no delete)
+select throws_ok(
+  $$ delete from public.price_snapshots where symbol = 'AAPL' $$,
+  '42501'
 );
 
 -- Anon: denied at the privilege stage (no grant to anon)

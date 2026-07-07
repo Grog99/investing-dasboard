@@ -52,6 +52,14 @@ describe("yahooProvider", () => {
     await expect(provider.fetchQuote("BADSYMBOL")).rejects.toThrow(YahooProviderError);
   });
 
+  it("throws a YahooProviderError when the response body is not valid JSON", async () => {
+    vi.stubGlobal("fetch", vi.fn().mockResolvedValue(new Response("<html>blocked</html>", { status: 200 })));
+
+    const provider = createYahooProvider("https://example.test");
+
+    await expect(provider.fetchQuote("AAPL")).rejects.toThrow(YahooProviderError);
+  });
+
   it("throws a YahooProviderError when regularMarketPrice is missing", async () => {
     vi.stubGlobal(
       "fetch",
