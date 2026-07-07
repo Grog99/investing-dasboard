@@ -59,5 +59,5 @@ Full server-side rendering (`output: "server"` in astro.config.mjs). All pages a
 
 ## CI
 
-- `.github/workflows/ci.yml` — runs lint + build on every push and PR to master. Requires `SUPABASE_URL` and `SUPABASE_KEY` repository secrets for the build step.
-- `.github/workflows/database-tests.yml` — runs the pgTAP suite (`supabase test db`) against a local Supabase stack on every push and PR to master. No repository secrets required.
+- `.github/workflows/ci.yml` — runs lint + build on every push and PR to main. Requires `SUPABASE_URL` and `SUPABASE_KEY` repository secrets for the build step.
+- `.github/workflows/database-tests.yml` — runs the pgTAP suite (`supabase test db`) against a local Supabase stack on every push and PR to main. No repository secrets required.
