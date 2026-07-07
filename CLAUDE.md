@@ -14,6 +14,8 @@ This file provides guidance to AI Agent when working with code in this repositor
 - `npx supabase db reset` — apply all migrations to the local database from scratch
 - `npm run gen:types` — regenerate `src/db/database.types.ts` from the local database
 - `npx supabase test db` — run the pgTAP suite under `supabase/tests/`
+- `npm run test` — Vitest unit suite (offline, mocked network + injected store; excludes `*.smoke.test.ts`)
+- `npm run test:smoke` — live price smoke test (real Yahoo Finance call; never run in CI)
 
 Pre-commit hooks: husky + lint-staged runs `eslint --fix` on `*.{ts,tsx,astro}` and `prettier --write` on `*.{json,css,md}`.
 
@@ -48,6 +50,8 @@ Full server-side rendering (`output: "server"` in astro.config.mjs). All pages a
 - **React**: no Next.js directives ("use client" etc.). Extract hooks to `src/components/hooks/`.
 - **Services/helpers** go in `src/lib/` (or `src/lib/services/` for extracted business logic).
 - **Shared types** (entities, DTOs) go in `src/types.ts`, derived from `src/db/database.types.ts` (e.g. `Holding`, `HoldingInsert`) so they can't drift from the schema.
+- **Prices**: consume market prices only via `src/lib/services/prices.ts` `getQuotes`/`getQuote` — cached (15-min TTL), degrades to `stale: true` on source failure (or `unavailable` if never cached), and never throws for a source issue. The source lives behind the `PriceProvider` interface (`src/lib/services/providers/`), with Yahoo `v8/finance/chart` as the default, swappable implementation.
+- **`price_snapshots` is a shared reference table** (public market data, no `user_id`): `authenticated` gets `select`/`insert`/`update` on all rows, no `delete`, no `anon` grant. This is a deliberate exception to the per-account RLS pattern above — do not copy the `auth.uid() = user_id` template onto it.
 
 ### Environment
 
@@ -59,5 +63,5 @@ Full server-side rendering (`output: "server"` in astro.config.mjs). All pages a
 
 ## CI
 
-- `.github/workflows/ci.yml` — runs lint + build on every push and PR to main. Requires `SUPABASE_URL` and `SUPABASE_KEY` repository secrets for the build step.
+- `.github/workflows/ci.yml` — runs lint + build + test on every push and PR to main. Requires `SUPABASE_URL` and `SUPABASE_KEY` repository secrets for the build step. `npm run test` is fully mocked/offline and excludes `*.smoke.test.ts`.
 - `.github/workflows/database-tests.yml` — runs the pgTAP suite (`supabase test db`) against a local Supabase stack on every push and PR to main. No repository secrets required.

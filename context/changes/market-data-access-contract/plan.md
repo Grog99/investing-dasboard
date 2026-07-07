@@ -343,23 +343,23 @@ Negligible at MVP scale (single user, low QPS, a handful of symbols). The 15-min
 
 #### Automated
 
-- [x] 2.1 Unit suite passes: `npm run test` (offline)
-- [x] 2.2 Tests cover fresh/stale/failure/unavailable/partial-batch/TTL-boundary
-- [x] 2.3 Build/type-checks against the contract: `npm run build`
-- [x] 2.4 Linting passes including test files: `npm run lint`
+- [x] 2.1 Unit suite passes: `npm run test` (offline) — 212d315
+- [x] 2.2 Tests cover fresh/stale/failure/unavailable/partial-batch/TTL-boundary — 212d315
+- [x] 2.3 Build/type-checks against the contract: `npm run build` — 212d315
+- [x] 2.4 Linting passes including test files: `npm run lint` — 212d315
 
 #### Manual
 
-- [ ] 2.5 `getQuotes` returns a typed `Map<string, PriceResult>` that narrows on `status`
-- [ ] 2.6 Seeded-stale + throwing provider yields `stale: true` (not a rejection)
+- [x] 2.5 `getQuotes` returns a typed `Map<string, PriceResult>` that narrows on `status` — 212d315
+- [x] 2.6 Seeded-stale + throwing provider yields `stale: true` (not a rejection) — 212d315
 
 ### Phase 3: CI enforcement, live smoke & conventions doc
 
 #### Automated
 
-- [ ] 3.1 CI (lint + build + test) runs and passes on a PR
-- [ ] 3.2 CI `npm run test` excludes the smoke file (log shows it skipped)
-- [ ] 3.3 `npm run test:smoke` passes live (GPW + US)
+- [x] 3.1 CI (lint + build + test) runs and passes on a PR
+- [x] 3.2 CI `npm run test` excludes the smoke file (log shows it skipped)
+- [x] 3.3 `npm run test:smoke` passes live (GPW + US)
 
 #### Manual
 
