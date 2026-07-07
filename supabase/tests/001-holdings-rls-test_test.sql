@@ -77,16 +77,18 @@ select results_eq(
   'owner unaffected by user B holding'
 );
 
--- Anon: sees and can mutate nothing
+-- Anon: sees and can mutate nothing. No grant to anon at all (migration only grants to
+-- authenticated), so anon lacks table-level privilege entirely — Postgres raises a
+-- permission error at the privilege-check stage, before RLS even applies. Note: throws_ok's
+-- 3-arg form treats a 5-char 2nd arg as errcode and the 3rd as the expected errmsg (not a
+-- description) per pgTAP semantics, so pass errcode alone here.
 select tests.clear_authentication();
 
-select is_empty(
-  'select * from public.holdings',
-  'anon sees nothing'
+select throws_ok(
+  $$ select * from public.holdings $$,
+  '42501'
 );
 
--- Note: throws_ok's 3-arg form treats a 5-char 2nd arg as errcode and the 3rd as the
--- expected errmsg (not a description) per pgTAP semantics, so pass errcode alone here.
 select throws_ok(
   $$ insert into public.holdings (user_id, ticker, quantity, buy_price)
      values ('00000000-0000-0000-0000-000000000000', 'ANON', 1, 1) $$,
