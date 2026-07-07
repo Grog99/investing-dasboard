@@ -64,6 +64,36 @@ export type Database = {
         }
         Relationships: []
       }
+      price_snapshots: {
+        Row: {
+          as_of: string
+          created_at: string
+          currency: string
+          price: number
+          source: string
+          symbol: string
+          updated_at: string
+        }
+        Insert: {
+          as_of: string
+          created_at?: string
+          currency: string
+          price: number
+          source?: string
+          symbol: string
+          updated_at?: string
+        }
+        Update: {
+          as_of?: string
+          created_at?: string
+          currency?: string
+          price?: number
+          source?: string
+          symbol?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
