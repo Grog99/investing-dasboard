@@ -420,9 +420,9 @@ per-account filter that every RLS policy and query applies. No further tuning wa
 
 #### Automated
 
-- [ ] 3.1 `npm run gen:types` produces a non-empty `src/db/database.types.ts`
-- [ ] 3.2 Build/type-check passes: `npm run build`
-- [ ] 3.3 Linting passes: `npm run lint`
+- [x] 3.1 `npm run gen:types` produces a non-empty `src/db/database.types.ts`
+- [x] 3.2 Build/type-check passes: `npm run build`
+- [x] 3.3 Linting passes: `npm run lint`
 
 #### Manual
 

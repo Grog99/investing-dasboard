@@ -10,6 +10,10 @@ This file provides guidance to AI Agent when working with code in this repositor
 - `npm run lint` — ESLint with type-checked rules
 - `npm run lint:fix` — auto-fix lint issues
 - `npm run format` — Prettier (includes prettier-plugin-astro + prettier-plugin-tailwindcss)
+- `npx supabase start` — start local Supabase (requires Docker)
+- `npx supabase db reset` — apply all migrations to the local database from scratch
+- `npm run gen:types` — regenerate `src/db/database.types.ts` from the local database
+- `npx supabase test db` — run the pgTAP suite under `supabase/tests/`
 
 Pre-commit hooks: husky + lint-staged runs `eslint --fix` on `*.{ts,tsx,astro}` and `prettier --write` on `*.{json,css,md}`.
 
@@ -37,9 +41,13 @@ Full server-side rendering (`output: "server"` in astro.config.mjs). All pages a
 - **shadcn/ui**: components live in `src/components/ui/`, "new-york" style variant. Install new ones with `npx shadcn@latest add [name]`.
 - **API routes**: use uppercase `GET`, `POST` exports; validate input with zod.
 - **Supabase migrations**: `supabase/migrations/` using naming format `YYYYMMDDHHmmss_short_description.sql`. Always enable RLS on new tables with granular per-operation, per-role policies.
+- **RLS pattern**: per domain table, four separate policies for role `authenticated` — `select`/`insert`/`update`/`delete` on `auth.uid() = user_id` (not one `for all` policy). No grant to `anon`, so anonymous access is denied by default. See `supabase/migrations/20260706161102_create_holdings.sql` for the template.
+- **Audit columns**: every domain table gets `created_at`/`updated_at timestamptz` with an `updated_at` trigger via the `moddatetime` extension (`extensions.moddatetime(updated_at)`).
+- **DB types**: `src/db/database.types.ts` is generated (never hand-edited) via `npm run gen:types` and committed to git, so builds/CI type-check without a live database. Regenerate it after every migration. `src/lib/supabase.ts`'s client is typed with it (`createServerClient<Database>`).
+- **pgTAP tests**: live only under `supabase/tests/` (e.g. `supabase_test_helpers`, `pgtap`), never in `supabase/migrations/` — they must never ship to production.
 - **React**: no Next.js directives ("use client" etc.). Extract hooks to `src/components/hooks/`.
 - **Services/helpers** go in `src/lib/` (or `src/lib/services/` for extracted business logic).
-- **Shared types** (entities, DTOs) go in `src/types.ts`.
+- **Shared types** (entities, DTOs) go in `src/types.ts`, derived from `src/db/database.types.ts` (e.g. `Holding`, `HoldingInsert`) so they can't drift from the schema.
 
 ### Environment
 
@@ -51,4 +59,5 @@ Full server-side rendering (`output: "server"` in astro.config.mjs). All pages a
 
 ## CI
 
-GitHub Actions workflow (`.github/workflows/ci.yml`) runs lint + build on every push and PR to master. Requires `SUPABASE_URL` and `SUPABASE_KEY` repository secrets for the build step.
+- `.github/workflows/ci.yml` — runs lint + build on every push and PR to master. Requires `SUPABASE_URL` and `SUPABASE_KEY` repository secrets for the build step.
+- `.github/workflows/database-tests.yml` — runs the pgTAP suite (`supabase test db`) against a local Supabase stack on every push and PR to master. No repository secrets required.
