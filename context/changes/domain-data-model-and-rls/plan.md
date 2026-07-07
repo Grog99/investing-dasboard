@@ -408,13 +408,13 @@ per-account filter that every RLS policy and query applies. No further tuning wa
 #### Automated
 
 - [x] 2.1 Isolation suite passes locally: `npx supabase test db` — 2f79ab9
-- [ ] 2.2 The database-tests CI job runs and passes on a PR
+- [x] 2.2 The database-tests CI job runs and passes on a PR — 4324550
 - [x] 2.3 Test covers all four operations + anon denial — 2f79ab9
 
 #### Manual
 
 - [x] 2.4 Commenting out one RLS policy makes the suite fail (no false green) — 2f79ab9
-- [ ] 2.5 CI job appears as a required check on the PR
+- [x] 2.5 CI job appears as a required check on the PR — 4324550
 
 ### Phase 3: Typed Supabase client + domain types + conventions doc
 
