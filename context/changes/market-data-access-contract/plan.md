@@ -357,12 +357,12 @@ Negligible at MVP scale (single user, low QPS, a handful of symbols). The 15-min
 
 #### Automated
 
-- [x] 3.1 CI (lint + build + test) runs and passes on a PR
-- [x] 3.2 CI `npm run test` excludes the smoke file (log shows it skipped)
-- [x] 3.3 `npm run test:smoke` passes live (GPW + US)
+- [x] 3.1 CI (lint + build + test) runs and passes on a PR — a5a2d9b
+- [x] 3.2 CI `npm run test` excludes the smoke file (log shows it skipped) — a5a2d9b
+- [x] 3.3 `npm run test:smoke` passes live (GPW + US) — a5a2d9b
 
 #### Manual
 
-- [ ] 3.4 CI `test` step appears as a green check on the PR
-- [ ] 3.5 Pointing the smoke at a bad host fails `test:smoke` but leaves `test` green
-- [ ] 3.6 `CLAUDE.md` Commands + conventions note match the shipped module
+- [x] 3.4 CI `test` step appears as a green check on the PR — a5a2d9b
+- [x] 3.5 Pointing the smoke at a bad host fails `test:smoke` but leaves `test` green — a5a2d9b
+- [x] 3.6 `CLAUDE.md` Commands + conventions note match the shipped module — a5a2d9b
