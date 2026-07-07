@@ -3,7 +3,7 @@ project: "Investing Dashboard"
 version: 1
 status: draft
 created: 2026-07-06
-updated: 2026-07-06
+updated: 2026-07-07
 prd_version: 1
 main_goal: low-complexity
 top_blocker: external
@@ -47,7 +47,7 @@ spreadsheet. It validates the live-price integration every other slice leans on.
 
 | ID   | Change ID                 | Outcome (user can …)                                            | Prerequisites   | PRD refs              | Status   |
 | ---- | ------------------------- | --------------------------------------------------------------- | --------------- | --------------------- | -------- |
-| F-01 | domain-data-model-and-rls | (foundation) migrations enabled + per-account RLS pattern established | —          | FR-001, Access Control | ready    |
+| F-01 | domain-data-model-and-rls | (foundation) migrations enabled + per-account RLS pattern established | —          | FR-001, Access Control | done     |
 | F-02 | market-data-access-contract | (foundation) stooq.pl price behind a resilient, cached adapter | —              | FR-003                | ready    |
 | S-01 | first-holding-live-value  | add a holding and see its live value & gain                     | F-01, F-02      | FR-002, FR-003, US-01 | proposed |
 | S-02 | edit-delete-holding       | edit and delete a holding                                       | S-01            | FR-004                | proposed |
@@ -92,7 +92,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Sequenced first because it is ready and every domain table depends on it; the load-bearing risk is getting per-account RLS wrong, which is the critical cross-account-privacy regression — so the isolation pattern is established and verified once, here, rather than re-invented per table.
-- **Status:** ready
+- **Status:** done
 
 ### F-02: Market-data (price) access contract — stooq.pl adapter
 
@@ -233,3 +233,5 @@ Foundations below assume these are present and do NOT re-scaffold them.
 ## Done
 
 (Empty on first generation. `/10x-archive` appends here — and flips the item's `Status` to `done` — when a change whose `Change ID` matches a roadmap item is archived.)
+
+- **F-01: (foundation) Supabase migrations are enabled and the per-account row-level-security isolation pattern is established and verified on the first domain table (holdings), so every later table inherits cross-account privacy by default.** — Archived 2026-07-07 → `context/archive/2026-07-06-domain-data-model-and-rls/`. Lesson: —.
