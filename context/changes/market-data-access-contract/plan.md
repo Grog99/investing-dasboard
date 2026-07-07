@@ -328,16 +328,16 @@ Negligible at MVP scale (single user, low QPS, a handful of symbols). The 15-min
 
 #### Automated
 
-- [x] 1.1 Migration applies cleanly: `npx supabase db reset` completes without error
-- [x] 1.2 RLS enabled with the three `authenticated` policies (Studio / `pg_policies`)
-- [x] 1.3 Access-shape suite passes: `npx supabase test db`
-- [x] 1.4 Types regenerate + build type-checks: `npm run gen:types && npm run build`
-- [x] 1.5 Linting passes: `npm run lint`
+- [x] 1.1 Migration applies cleanly: `npx supabase db reset` completes without error — e976ffe
+- [x] 1.2 RLS enabled with the three `authenticated` policies (Studio / `pg_policies`) — e976ffe
+- [x] 1.3 Access-shape suite passes: `npx supabase test db` — e976ffe
+- [x] 1.4 Types regenerate + build type-checks: `npm run gen:types && npm run build` — e976ffe
+- [x] 1.5 Linting passes: `npm run lint` — e976ffe
 
 #### Manual
 
-- [ ] 1.6 Studio shows RLS enabled with exactly three per-operation policies and no `anon` grant
-- [ ] 1.7 Breaking the shared-read policy makes the shared-read assertion fail (test detects it), then restored
+- [x] 1.6 Studio shows RLS enabled with exactly three per-operation policies and no `anon` grant — e976ffe
+- [x] 1.7 Breaking the shared-read policy makes the shared-read assertion fail (test detects it), then restored — e976ffe
 
 ### Phase 2: Price access contract (service + provider + Vitest)
 
