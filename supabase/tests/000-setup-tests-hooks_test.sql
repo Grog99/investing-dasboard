@@ -26,6 +26,8 @@ from extensions.http(
         || '&order=version.desc'
         || '&limit=1',
         array[
+            -- Public anon key for database.dev's own package registry (not a project
+            -- secret), copied verbatim from the Supabase Advanced pgTAP Testing guide.
             ('apiKey', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InhtdXB0cHBsZnZpaWZyYndtbXR2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODAxMDczNzIsImV4cCI6MTk5NTY4MzM3Mn0.z2CN0mvO2No8wSi46Gw59DFGCTJrzM0AQKsu_5k134s')::extensions.http_header
         ],
         null,

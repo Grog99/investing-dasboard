@@ -14,9 +14,9 @@ create table public.holdings (
 
 create index holdings_user_id_idx on public.holdings (user_id);
 
-grant select, insert, update, delete on public.holdings to authenticated;
-
 alter table public.holdings enable row level security;
+
+grant select, insert, update, delete on public.holdings to authenticated;
 
 create policy "holdings_select_own" on public.holdings
   for select to authenticated using (auth.uid() = user_id);

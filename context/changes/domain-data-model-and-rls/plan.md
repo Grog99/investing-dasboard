@@ -385,6 +385,20 @@ per-account filter that every RLS policy and query applies. No further tuning wa
 - Supabase CI database testing (workflow YAML): https://supabase.com/docs/guides/deployment/ci/testing
 - supabase_test_helpers: https://github.com/usebasejump/supabase-test-helpers
 
+## Addendum
+
+Three files changed outside this plan's explicit file list, as necessary side effects of the
+phases above (see [10x-impl-review](reviews/impl-review.md) F1):
+
+- `.github/workflows/ci.yml` — branch trigger fixed `master` → `main` alongside
+  `database-tests.yml` (commit e5bc4a1); both had never fired since the repo's default branch
+  is `main`.
+- `eslint.config.js` — added `{ ignores: ["src/db/database.types.ts"] }` so the generated,
+  never-hand-edited types file doesn't fail strict-typed lint (required by Phase 3's "commit
+  the generated types" contract).
+- `.gitattributes` — LF line-ending normalization, bundled into the root commit alongside the
+  pre-existing untracked scaffold.
+
 ## Progress
 
 > Convention: `- [ ]` pending, `- [x]` done. Append ` — <commit sha>` when a step lands. Do not rename step titles. See `references/progress-format.md`.
